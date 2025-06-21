@@ -1,13 +1,12 @@
-"""  Parse data from cian.ru
+"""
+Parse data from cian.ru
 https://github.com/lenarsaitov/cianparser
 """
 import datetime
-
 import cianparser
 import pandas as pd
 
 moscow_parser = cianparser.CianParser(location="Москва")
-
 
 def main():
     """
@@ -26,11 +25,7 @@ def main():
             "object_type": "secondary"
         })
     df = pd.DataFrame(data)
-
-    df.to_csv(csv_path,
-              encoding='utf-8',
-              index=False)
-
+    df.to_csv(csv_path, encoding='utf-8', index=False)
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,9 @@
+[cache]
+    type = "reflink,copy,symlink,hardlink"
+    dir = cache
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = s3://your-bucket-name/path/to/dvc-storage
+    profile = your-aws-profile
+    region = us-east-1

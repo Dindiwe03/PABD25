@@ -40,7 +40,7 @@
 </head>
 <body>
     <div class="form-container">
-        <h2>Введите четыре числа</h2>
+        <h2>Укажите параметры недвижимости</h2>
         <form id="numberForm">
             <input type="number" id="num1" placeholder="Площадь квартиры, м2" required>
             <input type="number" id="num2" placeholder="Количество комнат" required>
@@ -57,14 +57,36 @@
             const num2 = document.getElementById('num2').value;
             const num3 = document.getElementById('num3').value;
             const num4 = document.getElementById('num4').value;
-
+    
+            const inputs = [num1, num2, num3, num4];
+    
+            // Проверка значений
+            for (let i = 0; i < inputs.length; i++) {
+                const value = parseFloat(inputs[i]);
+    
+                if (isNaN(value)) {
+                    alert(`Значение №${i + 1} не является числом.`);
+                    return;
+                }
+    
+                if (value <= 0) {
+                    alert(`Значение №${i + 1} должно быть положительным.`);
+                    return;
+                }
+    
+                if (value > 1000000) {
+                    alert(`Значение №${i + 1} превышает допустимый максимум (1 000 000).`);
+                    return;
+                }
+            }
+    
             const data = {
-                area: num1,
-                rooms: num2,
-                total_floors: num3,
-                floor: num4
+                number1: parseFloat(num1),
+                number2: parseFloat(num2),
+                number3: parseFloat(num3),
+                number4: parseFloat(num4)
             };
-
+    
             fetch('/api/numbers', {
                 method: 'POST',
                 headers: {
@@ -74,14 +96,20 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('response').innerText = 'Ответ сервера: ' + JSON.stringify(data);
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                document.getElementById('response').innerText = 'Произошла ошибка при отправке данных';
-            });
+    if (data.status === 'success') {
+        document.getElementById('response').innerText =
+            '💰 Прогнозируемая цена: ' + data.price.toLocaleString('ru-RU') + ' ₽';
+    } else {
+        document.getElementById('response').innerText =
+            '⚠️ Ошибка: ' + (data.message || 'не удалось предсказать цену');
+    }
+})
+        .catch(error => {
+            console.error('Ошибка:', error);
+            document.getElementById('response').innerText = '❌ Не удалось отправить данные. Проверьте соединение.';
+        });
         }
-    </script>
+    </script>    
 </body>
 </head>
 </html>

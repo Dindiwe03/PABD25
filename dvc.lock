@@ -1,0 +1,78 @@
+schema: '2.0'
+stages:
+  process_data:
+    cmd: python src/preprocess.py --input_path=data/raw 
+      --output_path=data/processed/train.csv
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: fa3f7bfa32b4ce2170b20f44748e7f43.dir
+      size: 12095
+      nfiles: 1
+    - path: src/preprocess.py
+      hash: md5
+      md5: 4a5f0396a07e4b58e2a9e8b64cd0e5e9
+      size: 3164
+      isexec: true
+    outs:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: f384d26da382eb1d46b6ccae1d851ad7
+      size: 1837
+  train_model:
+    cmd: python src/train_model.py --model_path=models/apartment_price_model.pkl
+      --preprocessor_path=models/preprocessor.pkl 
+      --input_path=data/processed/train.csv
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 292a59f571196a9e1e0613d6fd23c0ac
+      size: 1782
+    - path: src/train_model.py
+      hash: md5
+      md5: f657306b60cac87cda723978185953ac
+      size: 5130
+    outs:
+    - path: models/apartment_price_model.pkl
+      hash: md5
+      md5: 06622d8c66d82bef75134d61a89e3ee2
+      size: 434385
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: b84ea635f2e83a820b78ce48b3b5c792
+      size: 2405
+  evaluate_model:
+    cmd: python src/evaluate_model.py 
+      --model_path=models/apartment_price_model.pkl 
+      --preprocessor_path=models/preprocessor.pkl 
+      --test_data_path=data/processed/train.csv
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 292a59f571196a9e1e0613d6fd23c0ac
+      size: 1782
+    - path: models/apartment_price_model.pkl
+      hash: md5
+      md5: 06622d8c66d82bef75134d61a89e3ee2
+      size: 434385
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: b84ea635f2e83a820b78ce48b3b5c792
+      size: 2405
+    - path: src/evaluate_model.py
+      hash: md5
+      md5: eaf97fd83e775bdb6ee65881d399b2b9
+      size: 6052
+    outs:
+    - path: reports/metrics.csv
+      hash: md5
+      md5: 85cd750c4471032808ce8af9f7b4405c
+      size: 204
+    - path: reports/metrics.json
+      hash: md5
+      md5: 6ccb0d5a1b4278c04d139864ffd299e3
+      size: 264
+    - path: reports/metrics.txt
+      hash: md5
+      md5: 18c1c0d49c09f62a4a7f50084aa7e8d5
+      size: 211
