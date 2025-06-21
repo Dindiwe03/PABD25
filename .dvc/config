@@ -7,3 +7,4 @@
     url = s3://your-bucket-name/path/to/dvc-storage
     profile = your-aws-profile
     region = us-east-1
+    endpointurl = https://storage.yandexcloud.net
