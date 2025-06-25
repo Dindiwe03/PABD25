@@ -20,18 +20,14 @@ stages:
       md5: f384d26da382eb1d46b6ccae1d851ad7
       size: 1837
   train_model:
-    cmd: python src/train_model.py --model_path=models/apartment_price_model.pkl
-      --preprocessor_path=models/preprocessor.pkl 
-      --input_path=data/processed/train.csv
+    cmd: python src/train_model.py --input_path=data/processed/train.csv 
+      --test_size=0.2 --model_path=models/apartment_price_model.pkl 
+      --preprocessor_path=models/preprocessor.pkl
     deps:
     - path: data/processed/train.csv
       hash: md5
       md5: 292a59f571196a9e1e0613d6fd23c0ac
       size: 1782
-    - path: src/train_model.py
-      hash: md5
-      md5: f657306b60cac87cda723978185953ac
-      size: 5130
     outs:
     - path: models/apartment_price_model.pkl
       hash: md5
@@ -76,3 +72,11 @@ stages:
       hash: md5
       md5: 18c1c0d49c09f62a4a7f50084aa7e8d5
       size: 211
+  preprocess:
+    cmd: python src/preprocess.py --input_path=data/raw 
+      --output_path=data/processed/train.csv
+    outs:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: f384d26da382eb1d46b6ccae1d851ad7
+      size: 1837

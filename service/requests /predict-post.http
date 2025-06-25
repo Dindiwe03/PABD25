@@ -1,0 +1,10 @@
+POST http://localhost:5000/api/predict
+Content-Type: application/json
+Authorization: Basic YWRtaW46MTIzNA==
+
+{
+  "area": 40,
+  "floor": 2,
+  "floors_count": 5,
+  "rooms_count": 3
+}

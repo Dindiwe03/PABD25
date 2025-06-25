@@ -1,33 +1,28 @@
 stages:
-  process_data:
-    cmd: python src/preprocess.py --input_path=data/raw 
-      --output_path=data/processed/train.csv
-    deps:
-    - data/raw
-    - src/preprocess.py
+  preprocess:
+    cmd: python src/preprocess.py --input_path=data/raw --output_path=data/processed/train.csv
     outs:
-    - data/processed/train.csv
-  evaluate_model:
-    cmd: python src/evaluate_model.py 
-      --model_path=models/apartment_price_model.pkl 
-      --preprocessor_path=models/preprocessor.pkl 
-      --test_data_path=data/processed/train.csv
-    deps:
-    - data/processed/train.csv
-    - models/apartment_price_model.pkl
-    - models/preprocessor.pkl
-    - src/evaluate_model.py
-    outs:
-    - reports/metrics.csv
-    - reports/metrics.json
-    - reports/metrics.txt
+      - data/processed/train.csv
+
   train_model:
-    cmd: python src/train_model.py --model_path=models/apartment_price_model.pkl
-      --preprocessor_path=models/preprocessor.pkl 
-      --input_path=data/processed/train.csv
+    cmd: python src/train_model.py --input_path=data/processed/train.csv 
+        --test_size=0.2 --model_path=models/apartment_price_model.pkl 
+        --preprocessor_path=models/preprocessor.pkl
     deps:
-    - data/processed/train.csv
-    - src/train_model.py
+      - data/processed/train.csv
     outs:
-    - models/apartment_price_model.pkl
-    - models/preprocessor.pkl
+      - models/apartment_price_model.pkl
+      - models/preprocessor.pkl
+
+  evaluate_model:
+    cmd: python src/evaluate_model.py --model_path=models/apartment_price_model.pkl
+         --preprocessor_path=models/preprocessor.pkl
+         --test_data_path=data/processed/train.csv
+    deps:
+      - models/apartment_price_model.pkl
+      - models/preprocessor.pkl
+      - data/processed/train.csv
+    outs:
+      - reports/metrics.json
+      - reports/metrics.txt
+      - reports/metrics.csv
